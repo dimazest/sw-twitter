@@ -1,5 +1,6 @@
 """Timeline plot generator for tweet streams."""
 from opster import command
+import pandas as pd
 
 
 @command()
@@ -8,8 +9,15 @@ def timeline(
     output=('o', 'timeline.png', 'The output file name.'),
 ):
     """Generate a timeline plot for a stream of tweets."""
-    print('input_file is: {}'.format(input_file))
-    print('output is: {}'.format(output))
+    df = pd.read_csv(
+        input_file,
+        sep=' ',
+        names=['Date', 'Count'],
+        parse_dates=True,
+        index_col='Date',
+    )
+
+    df.plot().get_figure().savefig(output)
 
 
 if __name__ == '__main__':
